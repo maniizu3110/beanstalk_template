@@ -1,0 +1,9 @@
+FROM node:alpine
+WORKDIR "/app"
+COPY ./package.json ./
+COPY ./package-lock.json ./
+COPY ./nuxt.config.js ./
+RUN npm install
+COPY . .
+ENV HOST=0.0.0.0
+CMD ["npm", "run", "dev"]

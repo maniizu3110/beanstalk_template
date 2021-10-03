@@ -1,0 +1,32 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t template/client -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run template/client npm run test
+
+after_success:
+  - docker build -t maniizu3110/template-client ./client
+  - docker build -t maniizu3110/template-nginx ./nginx
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push maniizu3110/template-client
+  - docker push maniizu3110/template-nginx
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-northeast-1"
+  app: "template"
+  env: "Template-env"
+  bucket_name: "elasticbeanstalk-ap-northeast-1-800317362310"
+  bucket_path: "template"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY

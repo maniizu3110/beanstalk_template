@@ -1,0 +1,16 @@
+version: "3"
+services:
+  client:
+    image: "maniizu3110/template-client"
+    mem_limit: 128m
+    hostname: client
+  server:
+    image: "maniizu3110/template-server"
+    mem_limit: 128m
+    hostname: api
+  nginx:
+    image: "maniizu3110/template-nginx"
+    mem_limit: 128m
+    hostname: nginx
+    ports:
+      - "80:80"
